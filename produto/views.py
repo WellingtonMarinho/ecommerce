@@ -33,6 +33,10 @@ class AdcionarAoCarrinho(View):
 
         variacao = get_object_or_404(models.Variacao, id=variacao_id)
 
+        if variacao.estoque < 1:
+            messages.error(self.request, 'Estoque insuficiente.')
+            return redirect(http_referer)
+
         if not self.request.session.get('carrinho'):
             self.request.session['carrinho'] = dict()
             self.request.session.save()
@@ -43,8 +47,9 @@ class AdcionarAoCarrinho(View):
             # TODO: Variação existe no carrinho
             pass
         else:
-            # TODO: Varialçao não existe no carrinho.
-            pass
+            carrinho[variacao_id] = {
+                
+            }
 
         return HttpResponse(f'{variacao.produto} {variacao.nome}')
 
